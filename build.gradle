@@ -7,10 +7,17 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
 
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/']
+    }
 }
