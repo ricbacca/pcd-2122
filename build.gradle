@@ -10,14 +10,12 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    main.java.srcDirs = ['src']
+}
+
 dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13.2'
-}
-
-sourceSets {
-    main {
-        java.srcDirs = ['src/']
-    }
 }
