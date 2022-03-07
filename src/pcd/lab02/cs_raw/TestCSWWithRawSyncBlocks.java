@@ -1,6 +1,6 @@
 package pcd.lab02.cs_raw;
 
-public class TestCSWithRawSynchBlocks {
+public class TestCSWWithRawSyncBlocks {
 
 	public static void main(String[] args) {
 		Object lock = new Object();
