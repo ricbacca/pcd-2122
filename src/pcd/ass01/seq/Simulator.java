@@ -4,27 +4,26 @@ import java.util.*;
 
 public class Simulator {
 
+	private static final double dt = 0.001;
+
 	private final SimulationView viewer;
 
 	/* bodies in the field */
 	private ArrayList<Body> bodies;
 
 	/* boundary of the field */
-	private Boundary bounds;
-
-	/* virtual time step */
-	double dt;
+	private final Boundary bounds;
 
 	public Simulator(SimulationView viewer, long nBodies) {
 		this.viewer = viewer;
-		testBodySet(nBodies);
+		this.bounds = new Boundary(-6.0, -6.0, 6.0, 6.0);
+
+		initializeBodySet(nBodies, bounds);
 	}
 	
 	public void execute(long nSteps) {
-		/* init virtual time */
+		/* init virtual time and iterations counter */
 		double vt = 0;
-		dt = 0.001;
-
 		long iter = 0;
 
 		/* simulation loop */
@@ -54,7 +53,8 @@ public class Simulator {
 	private V2d computeTotalForceOnBody(Body b) {
 		V2d totalForce = new V2d(0, 0);
 
-		/* compute total repulsive force, from all other bodies to the actually selected body */
+		/* compute total repulsive force, from all other
+		bodies to the actually selected body */
 		bodies.forEach(otherBody -> {
 			if (!b.equals(otherBody)) {
 				V2d forceByOtherBody = null;
@@ -70,8 +70,7 @@ public class Simulator {
 		return totalForce.sum(b.getCurrentFrictionForce());
 	}
 
-	private void testBodySet(long nBodies) {
-		bounds = new Boundary(-6.0, -6.0, 6.0, 6.0);
+	private void initializeBodySet(final long nBodies, final Boundary bounds) {
 		Random rand = new Random(System.currentTimeMillis());
 		bodies = new ArrayList<>();
 		for (int i = 0; i < nBodies; i++) {

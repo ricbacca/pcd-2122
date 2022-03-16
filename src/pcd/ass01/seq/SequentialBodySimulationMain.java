@@ -2,7 +2,6 @@ package pcd.ass01.seq;
 
 /**
  * Bodies simulation - legacy code: sequential, unstructured
- * 
  * @author aricci
  */
 public class SequentialBodySimulationMain {
