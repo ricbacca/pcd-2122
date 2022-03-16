@@ -8,10 +8,8 @@ package pcd.ass01.seq;
 public class SequentialBodySimulationMain {
 
     public static void main(String[] args) {
-                
     	SimulationView viewer = new SimulationView(620,620);
-
-    	Simulator sim = new Simulator(viewer);
+    	Simulator sim = new Simulator(viewer, 1000);
         sim.execute(50000);
     }
 }

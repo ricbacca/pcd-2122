@@ -12,19 +12,16 @@ import javax.swing.*;
 
 /**
  * Simulation view
- *
  * @author aricci
- *
  */
 public class SimulationView {
         
-	private VisualiserFrame frame;
+	private final VisualiserFrame frame;
 	
     /**
-     * Creates a view of the specified size (in pixels)
-     * 
-     * @param w
-     * @param h
+     * Creates a view of the specified size (in pixels)z
+     * @param w, width
+     * @param h, height
      */
     public SimulationView(int w, int h){
     	frame = new VisualiserFrame(w,h);
@@ -35,8 +32,7 @@ public class SimulationView {
     }
     
     public static class VisualiserFrame extends JFrame {
-
-        private VisualiserPanel panel;
+        private final VisualiserPanel panel;
 
         public VisualiserFrame(int w, int h){
             setTitle("Bodies Simulation");
@@ -46,10 +42,10 @@ public class SimulationView {
             getContentPane().add(panel);
             addWindowListener(new WindowAdapter(){
     			public void windowClosing(WindowEvent ev){
-    				System.exit(-1);
+    				System.exit(0);
     			}
     			public void windowClosed(WindowEvent ev){
-    				System.exit(-1);
+    				System.exit(0);
     			}
     		});
     		this.setVisible(true);
@@ -61,12 +57,10 @@ public class SimulationView {
 	        		panel.display(bodies, vt, iter, bounds);
 	            	repaint();
 	        	});
-        	} catch (Exception ex) {}
-        };
-        
-        public void updateScale(double k) {
-        	panel.updateScale(k);
-        }    	
+        	} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+        }
     }
 
     public static class VisualiserPanel extends JPanel implements KeyListener {
@@ -78,8 +72,8 @@ public class SimulationView {
     	private double vt;
     	private double scale = 1;
     	
-        private long dx;
-        private long dy;
+        private final long dx;
+        private final long dy;
         
         public VisualiserPanel(int w, int h){
             setSize(w,h);
@@ -116,7 +110,7 @@ public class SimulationView {
 			        if (radius < 1) {
 			        	radius = 1;
 			        }
-			        g2.drawOval(getXcoord(p.getX()),getYcoord(p.getY()), radius, radius); 
+			        g2.drawOval(getXcoord(p.getX()),getYcoord(p.getY()), radius, radius);
 			    });		    
 	    		String time = String.format("%.2f", vt);
 	    		g2.drawString("Bodies: " + bodies.size() + " - vt: " + time + " - nIter: " + nIter + " (UP for zoom in, DOWN for zoom out)", 2, 20);
@@ -144,10 +138,12 @@ public class SimulationView {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == 38){  		/* KEY UP */
-					scale *= 1.1;
-				} else if (e.getKeyCode() == 40){  	/* KEY DOWN */
-					scale *= 0.9;  
+				if (e.getKeyCode() == 38){
+					/* KEY UP */
+					updateScale(1.1);
+				} else if (e.getKeyCode() == 40){
+					/* KEY DOWN */
+					updateScale(0.9);
 				} 
 		}
 

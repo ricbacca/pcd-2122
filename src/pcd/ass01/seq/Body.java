@@ -1,19 +1,17 @@
 package pcd.ass01.seq;
 
-
 /*
  * This class represents a body
- * 
  */
 public class Body {
     
 	private static final double REPULSIVE_CONST = 0.01;
 	private static final double FRICTION_CONST = 1;
 	
-    private P2d pos;
-    private V2d vel;
-    private double mass;
-    private int id;
+    private final P2d pos;
+    private final V2d vel;
+    private final double mass;
+    private final int id;
     
     public Body(int id, P2d pos, V2d vel, double mass){
     	this.id = id;
@@ -45,7 +43,6 @@ public class Body {
     
     /**
      * Update the position, according to current velocity
-     * 
      * @param dt time elapsed 
      */
     public void updatePos(double dt){    	
@@ -63,9 +60,6 @@ public class Body {
     
     /**
      * Change the velocity
-     * 
-     * @param vx
-     * @param vy
      */
     public void changeVel(double vx, double vy){
     	vel.change(vx, vy);
@@ -73,9 +67,6 @@ public class Body {
   	
     /**
      * Computes the distance from the specified body
-     * 
-     * @param b
-     * @return
      */
     public double getDistanceFrom(Body b) {
     	double dx = pos.getX() - b.getPos().getX();
@@ -84,12 +75,7 @@ public class Body {
     }
     
     /**
-     * 
      * Compute the repulsive force exerted by another body
-     * 
-     * @param b
-     * @return
-     * @throws InfiniteForceException
      */
     public V2d computeRepulsiveForceBy(Body b) throws InfiniteForceException {
 		double dist = getDistanceFrom(b);
@@ -107,7 +93,6 @@ public class Body {
     }
     
     /**
-     * 
      * Compute current friction force, given the current velocity
      */
     public V2d getCurrentFrictionForce() {
@@ -115,10 +100,8 @@ public class Body {
     }
     
     /**
-     * Check if there collisions with the boundaty and update the
+     * Check if their collisions with the boundaty and update the
      * position and velocity accordingly
-     * 
-     * @param bounds
      */
     public void checkAndSolveBoundaryCollision(Boundary bounds){
     	double x = pos.getX();

@@ -4,139 +4,76 @@ import java.util.*;
 
 public class Simulator {
 
-	private SimulationView viewer;
+	private final SimulationView viewer;
 
 	/* bodies in the field */
-	ArrayList<Body> bodies;
+	private ArrayList<Body> bodies;
 
 	/* boundary of the field */
 	private Boundary bounds;
 
-	/* virtual time */
-	private double vt;
-
 	/* virtual time step */
 	double dt;
 
-	public Simulator(SimulationView viewer) {
+	public Simulator(SimulationView viewer, long nBodies) {
 		this.viewer = viewer;
-
-		/* initializing boundary and bodies */
-
-		// testBodySet1_two_bodies();
-		// testBodySet2_three_bodies();
-		// testBodySet3_some_bodies();
-		testBodySet4_many_bodies();
+		testBodySet(nBodies);
 	}
 	
 	public void execute(long nSteps) {
-
 		/* init virtual time */
-
-		vt = 0;
+		double vt = 0;
 		dt = 0.001;
 
 		long iter = 0;
 
 		/* simulation loop */
-
 		while (iter < nSteps) {
-
-			/* update bodies velocity */
-
-			for (int i = 0; i < bodies.size(); i++) {
-				Body b = bodies.get(i);
-
-				/* compute total force on bodies */
+			/* compute bodies velocity: total force and acceleration */
+			bodies.forEach(b -> {
 				V2d totalForce = computeTotalForceOnBody(b);
-
-				/* compute instant acceleration */
 				V2d acc = new V2d(totalForce).scalarMul(1.0 / b.getMass());
-
-				/* update velocity */
 				b.updateVelocity(acc, dt);
-			}
+			});
 
 			/* compute bodies new pos */
-
-			for (Body b : bodies) {
-				b.updatePos(dt);
-			}
+			bodies.forEach(b -> b.updatePos(dt));
 
 			/* check collisions with boundaries */
-
-			for (Body b : bodies) {
-				b.checkAndSolveBoundaryCollision(bounds);
-			}
+			bodies.forEach(b -> b.checkAndSolveBoundaryCollision(bounds));
 
 			/* update virtual time */
-
-			vt = vt + dt;
+			vt += dt;
 			iter++;
 
 			/* display current stage */
-
 			viewer.display(bodies, vt, iter, bounds);
-
 		}
 	}
 
 	private V2d computeTotalForceOnBody(Body b) {
-
 		V2d totalForce = new V2d(0, 0);
 
-		/* compute total repulsive force */
-
-		for (int j = 0; j < bodies.size(); j++) {
-			Body otherBody = bodies.get(j);
+		/* compute total repulsive force, from all other bodies to the actually selected body */
+		bodies.forEach(otherBody -> {
 			if (!b.equals(otherBody)) {
+				V2d forceByOtherBody = null;
 				try {
-					V2d forceByOtherBody = b.computeRepulsiveForceBy(otherBody);
-					totalForce.sum(forceByOtherBody);
-				} catch (Exception ex) {
+					forceByOtherBody = b.computeRepulsiveForceBy(otherBody);
+				} catch (InfiniteForceException e) {
+					e.printStackTrace();
 				}
+				totalForce.sum(forceByOtherBody != null ? forceByOtherBody : new V2d(0,0));
 			}
-		}
+		});
 
-		/* add friction force */
-		totalForce.sum(b.getCurrentFrictionForce());
-
-		return totalForce;
-	}
-	
-	private void testBodySet1_two_bodies() {
-		bounds = new Boundary(-4.0, -4.0, 4.0, 4.0);
-		bodies = new ArrayList<Body>();
-		bodies.add(new Body(0, new P2d(-0.1, 0), new V2d(0,0), 1));
-		bodies.add(new Body(1, new P2d(0.1, 0), new V2d(0,0), 2));		
+		return totalForce.sum(b.getCurrentFrictionForce());
 	}
 
-	private void testBodySet2_three_bodies() {
-		bounds = new Boundary(-1.0, -1.0, 1.0, 1.0);
-		bodies = new ArrayList<Body>();
-		bodies.add(new Body(0, new P2d(0, 0), new V2d(0,0), 10));
-		bodies.add(new Body(1, new P2d(0.2, 0), new V2d(0,0), 1));		
-		bodies.add(new Body(2, new P2d(-0.2, 0), new V2d(0,0), 1));		
-	}
-
-	private void testBodySet3_some_bodies() {
-		bounds = new Boundary(-4.0, -4.0, 4.0, 4.0);
-		int nBodies = 100;
-		Random rand = new Random(System.currentTimeMillis());
-		bodies = new ArrayList<Body>();
-		for (int i = 0; i < nBodies; i++) {
-			double x = bounds.getX0()*0.25 + rand.nextDouble() * (bounds.getX1() - bounds.getX0()) * 0.25;
-			double y = bounds.getY0()*0.25 + rand.nextDouble() * (bounds.getY1() - bounds.getY0()) * 0.25;
-			Body b = new Body(i, new P2d(x, y), new V2d(0, 0), 10);
-			bodies.add(b);
-		}
-	}
-
-	private void testBodySet4_many_bodies() {
+	private void testBodySet(long nBodies) {
 		bounds = new Boundary(-6.0, -6.0, 6.0, 6.0);
-		int nBodies = 1000;
 		Random rand = new Random(System.currentTimeMillis());
-		bodies = new ArrayList<Body>();
+		bodies = new ArrayList<>();
 		for (int i = 0; i < nBodies; i++) {
 			double x = bounds.getX0()*0.25 + rand.nextDouble() * (bounds.getX1() - bounds.getX0()) * 0.25;
 			double y = bounds.getY0()*0.25 + rand.nextDouble() * (bounds.getY1() - bounds.getY0()) * 0.25;
@@ -144,7 +81,4 @@ public class Simulator {
 			bodies.add(b);
 		}
 	}
-	
-	
-
 }
