@@ -2,7 +2,7 @@ package pcd.lab02.cs_raw;
 
 public class MyWorkerB extends Worker {
 	
-	private Object lock;
+	private final Object lock;
 	
 	public MyWorkerB(String name, Object lock){
 		super(name);

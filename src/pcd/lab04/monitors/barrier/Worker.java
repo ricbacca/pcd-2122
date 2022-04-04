@@ -1,6 +1,8 @@
 package pcd.lab04.monitors.barrier;
 
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Worker extends Thread {
 

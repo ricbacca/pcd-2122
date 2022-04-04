@@ -3,6 +3,7 @@ package pcd.lab02.jpf;
 import gov.nasa.jpf.vm.Verify;
 
 /**
+ * __
  * Check race condition: check-and-act concurrency hazard
  */
 public class TestCheckAct {
@@ -24,7 +25,7 @@ public class TestCheckAct {
 	}
 
 	static class MyThread extends Thread {
-		private Counter c;
+		private final Counter c;
 
 		public MyThread(Counter c) {
 			this.c = c;
@@ -38,7 +39,6 @@ public class TestCheckAct {
 	}
 
 	public static void main(String[] args) throws Exception {
-
 		Verify.beginAtomic();
 		Counter c = new Counter();
 		Thread th0 = new MyThread(c);

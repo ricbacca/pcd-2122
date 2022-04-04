@@ -11,11 +11,10 @@ public class ThreadA extends BaseAgent {
 	}
 	
 	public void run(){
-		/*
 		while (true){
 			waitAbit();
 			res.rightLeft();
-		}*/
+		}
 
 		res.rightLeft();
 	}	

@@ -3,7 +3,8 @@ package pcd.lab02.check_act;
 public class Counter {
 
 	private int cont;
-	private int min, max;
+	private final int min;
+	private final int max;
 	
 	public Counter(int min, int max){
 		this.cont = this.min = min;

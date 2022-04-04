@@ -1,7 +1,5 @@
 package pcd.lab02.jpf;
 
-import gov.nasa.jpf.vm.Verify;
-
 public class TestScenarios {
 
 	static class Worker extends Thread {
